@@ -122,17 +122,51 @@ document.getElementById('question').value=text;
 sendMessage();
 }
 
-function sendMessage(){
-const input=document.getElementById('question');
-const question=input.value.trim();
-if(!question)return;
-addMessage(question,"user");
-input.value="";
-addMessage(
-"Terima kasih atas pertanyaan kamu.\n\nTampilan awal website sudah aktif, tetapi mesin AI belum dihubungkan.\n\nPertanyaan: "+question+"\n\nKami tidak akan mengarang jawaban agama atau membuat dalil palsu. Sistem AI dan pencarian referensi Al-Qur'an serta hadis akan dipasang pada tahap berikutnya.",
-"bot"
-);
+
+async function sendMessage(){
+  const input = document.getElementById('question');
+  const question = input.value.trim();
+
+  if(!question) return;
+
+  addMessage(question,"user");
+  input.value = "";
+
+  addMessage("Sedang mencari jawaban...","bot");
+
+  try {
+    const response = await fetch(
+      "https://ilmu-hikmah-api.sajasederhana586.workers.dev/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          question: question
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    const answer = data.answer || data.response || data.text || data.result || data.message;
+
+    if(!response.ok) {
+      throw new Error(answer || "Terjadi kesalahan pada server");
+    }
+
+    if(!answer) {
+      throw new Error("Jawaban AI tidak ditemukan");
+    }
+
+    addMessage(answer,"bot");
+
+  } catch(error) {
+    addMessage("Maaf, terjadi kesalahan: " + error.message,"bot");
+  }
 }
+
 
 document.getElementById('question').addEventListener('keydown',function(e){
 if(e.key==="Enter"&&!e.shiftKey){
