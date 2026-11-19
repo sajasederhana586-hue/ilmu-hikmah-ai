@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#075b46">
+<title>ILMU & HIKMAH AI</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f7faf8;color:#18352b}
+header{background:#075b46;color:white;padding:17px 18px;display:flex;align-items:center;gap:12px}
+.logo{width:43px;height:43px;border-radius:14px;background:#ffffff20;display:grid;place-items:center;font-size:25px}
+header h2{font-size:18px;margin:0}
+header small{color:#d0e9df}
+main{max-width:800px;margin:auto;padding:24px 17px 30px}
+.welcome{text-align:center;margin:48px 0 28px}
+.welcome .symbol{font-size:48px}
+.welcome h1{font-size:27px;margin:12px 0;color:#075b46}
+.welcome p{color:#718078;line-height:1.6;font-size:14px}
+.section-title{font-size:13px;color:#718078;margin:22px 0 12px}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode{background:white;border:1px solid #e1ebe5;border-radius:13px;padding:15px;text-align:left;cursor:pointer;color:#18352b}
+.mode.active{border:2px solid #168362;background:#f0faf5}
+.mode strong{display:block;margin:7px 0}
+.mode small{color:#7b8982;font-size:12px;line-height:1.5}
+.icon{font-size:23px}
+#messages{display:flex;flex-direction:column;gap:13px;margin-top:25px}
+.message{padding:13px 15px;border-radius:14px;line-height:1.6;font-size:14px;max-width:90%;white-space:pre-wrap}
+.user{background:#dff2e8;align-self:flex-end}
+.bot{background:white;border:1px solid #e5eee8;align-self:flex-start}
+.input-area{position:sticky;bottom:8px;margin-top:25px;background:white;border:1px solid #dce8e0;border-radius:17px;padding:10px;box-shadow:0 5px 20px #12351b0c}
+textarea{width:100%;border:0;outline:0;resize:none;font:15px Arial;padding:9px;color:#18352b;min-height:48px}
+.input-bottom{display:flex;align-items:center;justify-content:space-between}
+.input-bottom small{color:#8a9990;font-size:11px}
+button{border:0;cursor:pointer}
+#send{background:#087654;color:white;border-radius:11px;padding:11px 18px;font-weight:bold}
+#send:disabled{opacity:.5}
+.examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+.example{background:white;border:1px solid #e2ebe5;border-radius:20px;padding:9px 12px;font-size:12px;color:#456456}
+footer{text-align:center;color:#89968e;font-size:11px;margin-top:30px;line-height:1.7}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">☪</div>
+<div>
+<h2>ILMU & HIKMAH AI</h2>
+<small>Asisten ilmu agama dan pengetahuan umum</small>
+</div>
+</header>
+
+<main>
+<div class="welcome">
+<div class="symbol">🌙</div>
+<h1>Assalamu'alaikum!</h1>
+<p>Selamat datang di ILMU & HIKMAH AI.<br>
+Apa yang ingin kamu pelajari hari ini?</p>
+</div>
+
+<div class="section-title">PILIH JENIS PERTANYAAN</div>
+
+<div class="modes">
+<button class="mode active" onclick="setMode('Agama Islam',this)">
+<span class="icon">📖</span>
+<strong>Agama Islam</strong>
+<small>Al-Qur'an, hadis dan penjelasan ulama</small>
+</button>
+<button class="mode" onclick="setMode('Pengetahuan Umum',this)">
+<span class="icon">🌍</span>
+<strong>Pengetahuan Umum</strong>
+<small>Teknologi, sains, sejarah dan lainnya</small>
+</button>
+</div>
+
+<div id="messages"></div>
+
+<div class="examples">
+<button class="example" onclick="ask('Apa dalil tentang menuntut ilmu?')">Dalil menuntut ilmu</button>
+<button class="example" onclick="ask('Bagaimana cara kerja mesin diesel?')">Mesin diesel</button>
+<button class="example" onclick="ask('Apa perbedaan hadis sahih dan dhaif?')">Hadis sahih dan dhaif</button>
+</div>
+
+<div class="input-area">
+<textarea id="question" placeholder="Tulis pertanyaan kamu di sini..." rows="2"></textarea>
+<div class="input-bottom">
+<small id="modeText">Mode: Agama Islam</small>
+<button id="send" onclick="sendMessage()">Kirim ➤</button>
+</div>
+</div>
+
+<footer>
+<strong>ILMU & HIKMAH AI</strong><br>
+Belajar, memahami dan mencari ilmu dari sumber terpercaya.<br>
+Jawaban agama harus dilengkapi referensi yang dapat diperiksa.
+</footer>
+</main>
+
+<script>
+let currentMode="Agama Islam";
+
+function setMode(mode,button){
+currentMode=mode;
+document.querySelectorAll('.mode').forEach(b=>b.classList.remove('active'));
+button.classList.add('active');
+document.getElementById('modeText').textContent="Mode: "+mode;
+document.getElementById('question').placeholder=
+mode==="Agama Islam"?"Tanyakan tentang Al-Qur'an dan hadis...":"Tanyakan apa saja...";
+}
+
+function addMessage(text,type){
+const box=document.createElement('div');
+box.className="message "+type;
+box.textContent=text;
+document.getElementById('messages').appendChild(box);
+box.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function ask(text){
+document.getElementById('question').value=text;
+sendMessage();
+}
+
+function sendMessage(){
+const input=document.getElementById('question');
+const question=input.value.trim();
+if(!question)return;
+addMessage(question,"user");
+input.value="";
+addMessage(
+"Terima kasih atas pertanyaan kamu.\n\nTampilan awal website sudah aktif, tetapi mesin AI belum dihubungkan.\n\nPertanyaan: "+question+"\n\nKami tidak akan mengarang jawaban agama atau membuat dalil palsu. Sistem AI dan pencarian referensi Al-Qur'an serta hadis akan dipasang pada tahap berikutnya.",
+"bot"
+);
+}
+
+document.getElementById('question').addEventListener('keydown',function(e){
+if(e.key==="Enter"&&!e.shiftKey){
+e.preventDefault();
+sendMessage();
+}
+});
+</script>
+</body>
+</html>
