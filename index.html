@@ -135,10 +135,17 @@ document.getElementById('question').value=text;
 sendMessage();
 }
 
-
 async function sendMessage(){
   const input = document.getElementById('question');
-  const question = input.value.trim();
+  let question = input.value.trim();
+  
+  const imageFile = document.getElementById('imageInput').files[0];
+
+if (!question && !imageFile) return;
+
+if (!question && imageFile) {
+    question = "Tolong baca dan jelaskan isi gambar ini.";
+}
 
   if(!question) return;
 
@@ -148,8 +155,6 @@ async function sendMessage(){
   addMessage("Sedang mencari jawaban...","bot");
 
   try {
-    const imageFile = document.getElementById('imageInput').files[0];
-
 let image = null;
 
 if (imageFile) {
