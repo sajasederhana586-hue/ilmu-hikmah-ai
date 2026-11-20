@@ -148,6 +148,23 @@ async function sendMessage(){
   addMessage("Sedang mencari jawaban...","bot");
 
   try {
+    const imageFile = document.getElementById('imageInput').files[0];
+
+let image = null;
+
+if (imageFile) {
+  const base64 = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(imageFile);
+  });
+
+  image = {
+    mimeType: imageFile.type,
+    data: base64
+  };
+}
     const response = await fetch(
       "https://ilmu-hikmah-api.sajasederhana586.workers.dev/",
       {
@@ -155,8 +172,9 @@ async function sendMessage(){
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          question: question
+       body: JSON.stringify({
+  question: question,
+  image: image
         })
       }
     );
