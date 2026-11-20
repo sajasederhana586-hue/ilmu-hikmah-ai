@@ -40,6 +40,10 @@ button{border:0;cursor:pointer}
 .example{background:white;border:1px solid #e2ebe5;border-radius:20px;padding:9px 12px;font-size:12px;color:#456456}
 footer{text-align:center;color:#89968e;font-size:11px;margin-top:30px;line-height:1.7}
 </style>
+  </style>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
 </head>
 <body>
 
@@ -110,11 +114,17 @@ mode==="Agama Islam"?"Tanyakan tentang Al-Qur'an dan hadis...":"Tanyakan apa saj
 }
 
 function addMessage(text,type){
-const box=document.createElement('div');
-box.className="message "+type;
-box.textContent=text;
-document.getElementById('messages').appendChild(box);
-box.scrollIntoView({behavior:'smooth',block:'nearest'});
+  const box = document.createElement('div');
+  box.className = 'message ' + type;
+
+  if(type === 'bot'){
+    box.innerHTML = marked.parse(text);
+  } else {
+    box.textContent = text;
+  }
+
+  document.getElementById('messages').appendChild(box);
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 function ask(text){
